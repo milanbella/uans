@@ -1,0 +1,17 @@
+---
+- name: Init repo {{ repo_name }}
+  ansible.builtin.shell: |
+    set -xe
+    cd /home/git/repos
+    if [[ ! -d "{{ repo_name }}" ]]; then
+      git init --bare {{ repo_name }}.git
+    fi
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: git
+  register: shell_result
+- name: Display shell_result
+  ansible.builtin.debug:
+    msg: "{{ shell_result }}" 
+

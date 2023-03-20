@@ -1,0 +1,21 @@
+/etc/samba/smb.conf
+===================
+
+[share]
+    comment = Ubuntu File Server Share
+    path = /sambashare
+    browsable = yes
+    guest ok = no
+    read only = no
+    create mask = 0755
+    valid users = @sambashare
+
+Set user's samba password
+=========================
+
+> smbpasswd -a milan
+
+Enable user's samba account
+===========================
+
+> smbpasswd -e milan

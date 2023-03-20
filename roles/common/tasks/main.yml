@@ -1,0 +1,47 @@
+---
+- name: Check if '/opt/.ansible_state/roles/common' exists
+  stat:
+    path: /opt/.ansible_state/roles/common
+  register: ansible_state_roles_common
+- name: Installing common role
+  block:
+  - name: Set time zone Europe/Bratislava 
+    ansible.builtin.shell: |
+      timedatectl set-timezone Europe/Bratislava
+    become: yes
+  - name: Install common apt packages
+    apt:
+      pkg:
+        - vim
+        - tmux
+        - net-tools
+        - git
+        - expect
+        - curl
+        - ncat
+        - unzip
+        - expect
+      update_cache: yes
+    become: yes
+  - name: Inport tasks ./vim.yml
+    import_tasks: ./vim.yml
+  - name: Inport tasks ./tmux.yml
+    import_tasks: ./tmux.yml
+  - name: Inport tasks ./profile.yml
+    import_tasks: ./profile.yml
+  - name: Create '/opt/.ansible_state' folder
+    file:
+      path: /opt/.ansible_state
+      state: directory
+    become: yes
+  - name: Create '/opt/.ansible_state/roles' folder
+    file:
+      path: /opt/.ansible_state/roles
+      state: directory
+    become: yes
+  - name: Create '/opt/.ansible_state/roles/common' file
+    file:
+      path: /opt/.ansible_state/roles/common
+      state: touch
+    become: yes
+  when: not ansible_state_roles_common.stat.exists

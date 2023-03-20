@@ -1,0 +1,24 @@
+---
+- name: Check if '/opt/.ansible_state/roles/samba' exists
+  stat:
+    path: /opt/.ansible_state/roles/samba
+  register: ansible_state_roles_samba
+- name: Installing samba role
+  block:
+  - name: Install common apt packages
+    apt:
+      pkg:
+        - smaba
+      update_cache: yes
+    become: yes
+  - name: Create '/opt/.ansible_state/roles' folder
+    file:
+      path: /opt/.ansible_state/roles
+      state: directory
+    become: yes
+  - name: Create '/opt/.ansible_state/roles/samba' file
+    file:
+      path: /opt/.ansible_state/roles/samba
+      state: touch
+    become: yes
+  when: not ansible_state_roles_samba.stat.exists

@@ -1,0 +1,19 @@
+---
+- name: Install vimrc
+  ansible.builtin.copy:
+    src: ../files/vim/.vimrc
+    dest: "{{ ansible_env.HOME }}/.vimrc"
+- name: Install vim files
+  ansible.builtin.unarchive:
+    src: ../files/vim/.vim.tar.gz
+    dest: "{{ ansible_env.HOME }}"
+- name: Imstall vimrc for root user
+  ansible.builtin.copy:
+    src: ../files/vim/.vimrc
+    dest: "/root/.vimrc"
+  become: yes
+- name: Install vim files for root user
+  ansible.builtin.unarchive:
+    src: ../files/vim/.vim.tar.gz
+    dest: "/root"
+  become: yes

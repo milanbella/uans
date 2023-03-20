@@ -1,0 +1,10 @@
+---
+- name: Copy tmux configuration
+  ansible.builtin.copy:
+    src: ../files/tmux/.tmux.conf
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+- name: Copy tmux configuration for root user
+  ansible.builtin.copy:
+    src: ../files/tmux/.tmux.conf
+    dest: "/root/.tmux.conf"
+  become: yes

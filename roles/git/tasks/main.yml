@@ -1,0 +1,63 @@
+---
+- name: Check if '/opt/.ansible_state/roles/git' exists
+  stat:
+    path: /opt/.ansible_state/roles/git
+  register: ansible_state_roles_git
+- name: Installing common role git.
+  block:
+  - name: Install git
+    ansible.builtin.apt:
+      pkg:
+        - git
+      update_cache: yes
+    become: yes
+  - name: Create group git
+    ansible.builtin.group:
+      name: git
+    become: yes
+  - name: Create git user
+    ansible.builtin.user:
+      name: git
+      group: git
+    become: yes
+  - name: Create /home/git/.ssh folder.
+    ansible.builtin.file:
+      path: /home/git/.ssh
+      state: directory
+      owner: git
+      group: git
+    become: yes
+  - name: Create /home/git/.ssh/authorized_keys file
+    ansible.builtin.copy:
+      src: ../files/authorized_keys_for_user_git
+      dest: /home/git/.ssh/authorized_keys
+      owner: git
+      group: git
+      mode: '0644'
+    become: yes
+  - name: Generate private key
+    ansible.builtin.shell: |
+      set -xe
+      if [[ ! -d /root/.ssh ]]; then
+        mkdir ~/.ssh
+      fi
+      if [[ ! -f /root/.ssh/id_rsa ]]; then
+        ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -q -N ""
+        cat /root/.ssh/id_rsa.pub >> /home/git/.ssh/authorized_keys 
+      fi
+    become: yes
+    args:
+      executable: /bin/bash
+  - name: Import tasks ./init_repos.yml
+    ansible.builtin.include_tasks: ./init_repos.yml
+  - name: Create '/opt/.ansible_state/roles' folder.
+    file:
+      path: /opt/.ansible_state/roles
+      state: directory
+    become: yes
+  - name: Create '/opt/.ansible_state/roles/git' file.
+    file:
+      path: /opt/.ansible_state/roles/git
+      state: touch
+    become: yes
+  when: not ansible_state_roles_git.stat.exists

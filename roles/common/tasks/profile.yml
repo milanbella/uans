@@ -1,0 +1,6 @@
+---
+- name: Imstall shell profile
+  ansible.builtin.copy:
+    src: ../files/my_profile.sh
+    dest: "/etc/profile.d"
+  become: yes

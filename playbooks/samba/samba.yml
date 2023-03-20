@@ -1,0 +1,11 @@
+- hosts: "{{ in_hosts }}"
+  vars_files:
+  roles:
+    - samba
+  tasks:
+  - name: Install smaba package
+    apt:
+      pkg:
+        - samba
+      update_cache: yes
+    become: yes
