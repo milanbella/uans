@@ -1,0 +1,5 @@
+- hosts: "{{ in_hosts }}"
+  vars_files:
+  roles:
+    - git
+  tasks:

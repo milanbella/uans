@@ -1,4 +1,5 @@
 ---
+# Note: exampole git origin (path segment 'repos/' is be relative to git user home folder) :  git@192.168.159.46:repos/{{ repo_name }}.git
 - name: Init repo {{ repo_name }}
   ansible.builtin.shell: |
     set -xe
