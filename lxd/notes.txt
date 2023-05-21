@@ -1,0 +1,37 @@
+----
+sudo snap install lxd
+----
+lxc network create testbr0 ipv6.address=none ipv4.address=10.0.3.1/24 ipv4.nat=true
+lxc network delete testbr0
+----
+lxd init
+---
+lxc launch images:ubuntu/22.04 ubuntu-container
+
+lxc list
+lxc info ubuntu-container
+lxc shell ubuntu-container
+
+----
+apt update
+apt install net-tools
+apt install openssh-server
+----
+
+https://serverfault.com/questions/140622/how-can-i-port-forward-with-iptables
+
+sysctl net.ipv4.conf.eth0.forwarding=1 
+sysctl net.ipv6.conf.eth0.forwarding=1 
+
+iptables -t nat -A PREROUTING -p tcp -i ppp0 --dport 2222 -j DNAT --to-destination 10.0.3.205:22
+iptables -A FORWARD -p tcp -d 10.0.3.205 --dport 2222 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+
+---------
+
+WSL - install snap
+
+sudo apt update
+sudo apt install snapd
+snap version
+----------
