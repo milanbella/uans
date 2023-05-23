@@ -6,11 +6,11 @@ lxc network delete testbr0
 ----
 lxd init
 ---
-lxc launch images:ubuntu/22.04 ubuntu-container
+lxc launch images:ubuntu/22.04 gao
 
 lxc list
-lxc info ubuntu-container
-lxc shell ubuntu-container
+lxc info gao
+lxc shell gao
 
 ----
 apt update
